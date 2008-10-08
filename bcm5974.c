@@ -192,8 +192,8 @@ static const struct atp_config atp_config_table[] = {
 		0x81, sizeof(struct tp_data),
 		{ DIM_PRESSURE, DIM_PRESSURE / SN_PRESSURE, 0, 256 },
 		{ DIM_WIDTH, DIM_WIDTH / SN_WIDTH, 0, 2048 },
-		{ DIM_X, DIM_X / SN_COORD, -4824, 5342 },
-		{ DIM_Y, DIM_Y / SN_COORD, -172, 5820 }
+		{ DIM_X, DIM_X / SN_COORD, -4824, 4824 },
+		{ DIM_Y, DIM_Y / SN_COORD, -172, 4290 }
 	},
 	{}
 };

@@ -25,17 +25,19 @@ ETCPATH=/etc/modprobe.d/$DRIVER
 echo -----------------------------------------------------------------------
 
 DIR=`dirname $0`
-PAT_HEAD="options usbhid quirks="
-PAT_MBA="0x05ac:0x022"
-PAT_MBP="0x05ac:0x023"
-MATCH_MBA=$PAT_HEAD$PAT_MBA
-MATCH_MBP=$PAT_HEAD$PAT_MBP
+LSUSB=/usr/sbin/lsusb
 
-if [ -x /usr/sbin/lsusb ]; then
-    if [ "lsusb|grep $PAT_MBA" != "" ]; then
-        SED="s/#$MATCH_MBA/$MATCH_MBA/"
-    elif [ "lsusb|grep $PAT_MBP" != "" ]; then
-        SED="s/#$MATCH_MBP/$MATCH_MBP/"
+PAT_HEAD="options usbhid quirks="
+PAT[0]="05ac:022"
+PAT[1]="05ac:023"
+MATCH[0]=${PAT_HEAD}0x05ac:0x022
+MATCH[1]=${PAT_HEAD}0x05ac:0x023
+
+if [ -x $LSUSB ]; then
+    if [ "`$LSUSB|grep ${PAT[0]}`" != "" ]; then
+        SED="s/#${MATCH[0]}/${MATCH[0]}/"
+    elif [ "`$LSUSB|grep ${PAT[1]}`" != "" ]; then
+        SED="s/#${MATCH[1]}/${MATCH[1]}/"
     else
         echo No suitable device found
         exit 1
