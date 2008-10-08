@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# bcm5943-post-install - post-installing the BCM5974
+# bcm5943-pre-install - check system before installing the bcm5974
 #
 # Copyright (C) 2008	   Henrik Rydberg (rydberg@euromail.se)
 #
@@ -20,33 +20,23 @@
 #
 
 DRIVER=bcm5974
-ETCPATH=/etc/modprobe.d/$DRIVER
-
-echo -----------------------------------------------------------------------
-
-DIR=`dirname $0`
 LSUSB=/usr/sbin/lsusb
 
-PAT_HEAD="options usbhid quirks="
 PAT[0]="05ac:022"
 PAT[1]="05ac:023"
-MATCH[0]=${PAT_HEAD}0x05ac:0x022
-MATCH[1]=${PAT_HEAD}0x05ac:0x023
 
 if [ -x $LSUSB ]; then
     if [ "`$LSUSB|grep ${PAT[0]}`" != "" ]; then
-        SED="s/#${MATCH[0]}/${MATCH[0]}/"
+        exit 0
     elif [ "`$LSUSB|grep ${PAT[1]}`" != "" ]; then
-        SED="s/#${MATCH[1]}/${MATCH[1]}/"
+        exit 0
     else
-        echo No suitable device found
-        exit 1
+        echo bcm5974: no suitable device found
+        exit -1
     fi
 else
-    echo \* USB device: UNKNOWN - lsusb not found
-    exit 1
+    echo bcm5974: cannot determine device type
+    exit -1
 fi
-
-cat $DIR/..$ETCPATH | sed "$SED" > $ETCPATH
 
 exit 0

@@ -1,6 +1,5 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * Automatically packaged by DKMS.
+  * Switch back to normal mode when closing
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP
-
