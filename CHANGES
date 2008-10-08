@@ -1,3 +1,10 @@
+bcm5974 (0.59) unstable; urgency=low
+
+  * Cleanup patch from Dmitry Torokhov
+  * Auto-suspend patch from Dmitry Torokhov
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Fri, 25 Jul 2008 20:14:05 +0200
+
 bcm5974 (0.58) unstable; urgency=low
 
   * Name changes; use usbhid definitions, rename atp to bcm5974

@@ -9,7 +9,9 @@ Standing in the source directory, do:
 
 3. sudo ./scripts/bcm5974-post-install
 
-4. reboot (or reload the bcm5974 module if already installed)
+4. sudo depmod -a
+
+5. reboot (or reload the bcm5974 module if already installed)
 
 For trouble-shooting, try running
 
