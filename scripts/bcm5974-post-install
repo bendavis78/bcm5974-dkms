@@ -34,7 +34,7 @@ MATCH_MBP=$PAT_HEAD$PAT_MBP
 if [ -x /usr/sbin/lsusb ]; then
     if [ "lsusb|grep $PAT_MBA" != "" ]; then
         SED="s/#$MATCH_MBA/$MATCH_MBA/"
-    elif [ $has_mbb -gt 0 ]; then
+    elif [ "lsusb|grep $PAT_MBP" != "" ]; then
         SED="s/#$MATCH_MBP/$MATCH_MBP/"
     else
         echo No suitable device found
