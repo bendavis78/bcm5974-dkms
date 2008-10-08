@@ -1,6 +1,9 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * Keep reset_resume around
-  * Submitted to kernel.org
+  * Name changes; use usbhid definitions, rename atp to bcm5974
+  * Input syncing moved to report functions, event type setup broken out
+  * Traffic functions added for open/close and suspend/resume logic
+  * Open/close and suspend/resume transition logic corrected
+  * Open/close serialized with respect to suspend/resume  
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP

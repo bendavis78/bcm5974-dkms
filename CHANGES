@@ -1,9 +1,19 @@
+bcm5974 (0.58) unstable; urgency=low
+
+  * Name changes; use usbhid definitions, rename atp to bcm5974
+  * Input syncing moved to report functions, event type setup broken out
+  * Traffic functions added for open/close and suspend/resume logic
+  * Open/close and suspend/resume transition logic corrected
+  * Open/close serialized with respect to suspend/resume  
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Wed, 23 Jul 2008 02:20:10 +0200
+
 bcm5974 (0.57) unstable; urgency=low
 
   * Keep reset_resume around
   * Submitted to kernel.org
 
- -- Henrik Rydberg <rydberg@euromail.se>  Fri, 18 Jul 2008 02:42:52 +0200
+ -- Henrik Rydberg <rydberg@euromail.se>  Sat, 19 Jul 2008 01:42:52 +0200
 
 bcm5974 (0.56) unstable; urgency=low
 
