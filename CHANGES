@@ -1,0 +1,62 @@
+07JUL2008 version 0.51
+----------------------
+
+Fine-tuned signal-to-noise ratio, smoother mouse motion.
+Interrupt code got minor simplifications.
+GFP_ATOMIC completetly removed.
+
+06JUL2008 version 0.5
+----------------------
+
+Working palm detection, changes for kernel.org, dkms introduced.
+
+01JUL2008 version 0.42
+----------------------
+
+First button click registered, pre/post-reset added.
+
+29JUN2008 version 0.41
+----------------------
+
+The reset_resume kernel function added.
+
+29JUN2008 version 0.4
+----------------------
+
+Both finger pressure and width reported.
+
+27JUN2008 version 0.31
+----------------------
+
+Administrative changes for kernel.org.
+
+27JUN2008 version 0.3
+----------------------
+
+Explicit device structure, use all packages.
+
+27JUN2008 version 0.23
+----------------------
+
+Finger release not reported properly.
+
+26JUN2008 version 0.22
+----------------------
+
+ABS coordinates more stable with synaptics.
+
+25JUN2008 version 0.21
+----------------------
+
+Fixed the relative coordinate scaling.
+
+25JUN2008 version 0.2
+----------------------
+
+Misinterpreted pressure input, noise reduction.
+
+24JUN2008 version 0.1
+----------------------
+
+First version.
+
