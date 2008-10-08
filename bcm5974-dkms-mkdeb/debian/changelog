@@ -1,5 +1,6 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * Smoother motion in mouse interface
+  * Compatibility mode reverted
+  * BTN_TOUCH event added for mousedev
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP

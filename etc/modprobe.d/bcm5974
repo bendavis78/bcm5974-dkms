@@ -8,18 +8,3 @@
 
 ## Debug level - uncomment this to get raw packets in /var/log/debug
 #options bcm5974 debug=99
-
-## Driver mode: 1 - mouse; 2 - touchpad
-options bcm5974 driver_mode=2
-
-## Mouse motion damping
-#options bcm5974 mouse_motion_damping=8
-
-## Vertical mouse wheel damping
-#options bcm5974 mouse_wheel_damping=256
-
-## Horizontal mouse wheel damping
-#options bcm5974 mouse_hwheel_damping=256
-
-## Mouse button mode: 0 - standard; 1 - unix three-button; 2 - mac three-button
-#options bcm5974 mouse_button_mode=2
