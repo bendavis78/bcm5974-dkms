@@ -157,7 +157,6 @@ struct atp {
 	struct bt_data *bt_data;	/* button transferred data */
 	struct urb *tp_urb;		/* trackpad usb request block */
 	struct tp_data *tp_data;	/* trackpad transferred data */
-	unsigned tp_valid;		/* trackpad sensors valid */
 };
 
 /* logical dimensions */
@@ -283,10 +282,9 @@ static int report_tp_state(struct atp *dev, int size)
 #define ATP_WELLSPRING_MODE_WRITE_REQUEST_ID	9
 #define ATP_WELLSPRING_MODE_REQUEST_VALUE	0x300
 #define ATP_WELLSPRING_MODE_REQUEST_INDEX	0
-#define ATP_WELLSPRING_MODE_VENDOR_VALUE_1	0x01
-#define ATP_WELLSPRING_MODE_VENDOR_VALUE_2	0x05
+#define ATP_WELLSPRING_MODE_VENDOR_VALUE	0x01
 
-static int atp_wellspring_init(struct atp *dev)
+static int atp_wellspring_mode(struct atp *dev)
 {
 	char *data = kmalloc(8, GFP_KERNEL);
 	int error = 0, size;
@@ -294,24 +292,6 @@ static int atp_wellspring_init(struct atp *dev)
 	if (!data) {
 		err("bcm5974: out of memory");
 		error = -ENOMEM;
-		goto error;
-	}
-
-	/* reset button endpoint */
-	if (usb_control_msg(dev->udev, usb_rcvctrlpipe(dev->udev, 0),
-			USB_REQ_CLEAR_FEATURE, USB_RECIP_ENDPOINT,
-			0, dev->cfg.bt_ep, NULL, 0, 5000)) {
-		err("bcm5974: could not reset button endpoint");
-		error = -EIO;
-		goto error;
-	}
-
-	/* reset trackpad endpoint */
-	if (usb_control_msg(dev->udev, usb_rcvctrlpipe(dev->udev, 0),
-			USB_REQ_CLEAR_FEATURE, USB_RECIP_ENDPOINT,
-			0, dev->cfg.tp_ep, NULL, 0, 5000)) {
-		err("bcm5974: could not reset trackpad endpoint");
-		error = -EIO;
 		goto error;
 	}
 
@@ -329,8 +309,7 @@ static int atp_wellspring_init(struct atp *dev)
 	}
 
 	/* apply the mode switch */
-	data[0] = ATP_WELLSPRING_MODE_VENDOR_VALUE_1;
-	data[1] = ATP_WELLSPRING_MODE_VENDOR_VALUE_2;
+	data[0] = ATP_WELLSPRING_MODE_VENDOR_VALUE;
 
 	/* write configuration */
 	size = usb_control_msg(dev->udev, usb_sndctrlpipe(dev->udev, 0),
@@ -345,9 +324,7 @@ static int atp_wellspring_init(struct atp *dev)
 		goto error;
 	}
 
-	dev->tp_valid = 0;
-
-	printk(KERN_INFO "bcm5974: Wellspring mode initialized.\n");
+	dprintk(2, "bcm5974: switched to wellspring mode.\n");
 
 	kfree(data);
 	return 0;
@@ -409,11 +386,9 @@ static void irq_trackpad(struct urb *urb)
 		goto exit;
 	}
 
-	/* first sample data ignored */
-	if (!dev->tp_valid) {
-		dev->tp_valid = 1;
+	/* control response ignored */
+	if (dev->tp_urb->actual_length == 2)
 		goto exit;
-	}
 
 	if (report_tp_state(dev, dev->tp_urb->actual_length)) {
 		dprintk(1, "bcm5974: bad trackpad package, length: %d\n",
@@ -434,18 +409,21 @@ static int atp_open(struct input_dev *input)
 	struct atp *dev = input_get_drvdata(input);
 
 	if (!dev->open) {
+		if (atp_wellspring_mode(dev))
+			printk(KERN_INFO "bcm5974: mode switch failed\n");
+
 		if (usb_submit_urb(dev->bt_urb, GFP_KERNEL))
 			goto error;
 		if (usb_submit_urb(dev->tp_urb, GFP_KERNEL))
-			goto err_free_bt_urb;
+			goto err_kill_bt;
 	}
 
 	dev->open = 1;
 	dev->suspended = 0;
 	return 0;
 
-err_free_bt_urb:
-	usb_free_urb(dev->bt_urb);
+err_kill_bt:
+	usb_kill_urb(dev->bt_urb);
 error:
 	return -EIO;
 }
@@ -485,12 +463,6 @@ static int atp_probe(struct usb_interface *iface,
 	dev->udev = udev;
 	dev->input = input_dev;
 	dev->cfg = *cfg;
-
-	/* switch to raw sensor mode */
-	if (atp_wellspring_init(dev)) {
-		error = -EIO;
-		goto err_free_devs;
-	}
 
 	dev->bt_urb = usb_alloc_urb(0, GFP_KERNEL);
 	if (!dev->bt_urb) {
@@ -631,35 +603,12 @@ static int atp_resume(struct usb_interface *iface)
 	return error;
 }
 
-static int atp_reset_resume(struct usb_interface *iface)
-{
-	struct atp *dev = usb_get_intfdata(iface);
-
-	if (dev && atp_wellspring_init(dev))
-		printk(KERN_INFO "bcm5974: warning: reset failed\n");
-
-	return atp_resume(iface);
-}
-
-static int atp_pre_reset(struct usb_interface *iface)
-{
-	return atp_suspend(iface, PMSG_ON);
-}
-
-static int atp_post_reset(struct usb_interface *iface)
-{
-	return atp_reset_resume(iface);
-}
-
 static struct usb_driver atp_driver = {
 	.name = "bcm5974",
 	.probe = atp_probe,
 	.disconnect = atp_disconnect,
 	.suspend = atp_suspend,
 	.resume = atp_resume,
-	.reset_resume = atp_reset_resume,
-	.pre_reset = atp_pre_reset,
-	.post_reset = atp_post_reset,
 	.id_table = atp_table,
 };
 

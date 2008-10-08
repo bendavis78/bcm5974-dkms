@@ -25,19 +25,18 @@ LSUSB=/usr/sbin/lsusb
 PAT[0]="05ac:022"
 PAT[1]="05ac:023"
 
-#if [ -x $LSUSB ]; then
-if true; then
+if [ -x $LSUSB ]; then
     if [ "`$LSUSB|grep ${PAT[0]}`" != "" ]; then
         exit 0
     elif [ "`$LSUSB|grep ${PAT[1]}`" != "" ]; then
         exit 0
     else
         echo bcm5974: no suitable device found
-        exit 1
+        exit -1
     fi
 else
     echo bcm5974: cannot determine device type
-    exit 1
+    exit -1
 fi
 
 exit 0

@@ -1,6 +1,9 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * Package updates.
-  * Reverting GFP_ATOMIC for irq handlers.
+  * Leave device initialization to hid; use mode-switch only
+  * Mode switch moved to atp_open and simplified
+  * Corrected cleanup action in atp_open
+  * Simplified control package detection
+  * Removed reset_resume, pre_reset, post_reset; not needed
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP

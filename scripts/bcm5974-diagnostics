@@ -138,15 +138,6 @@ else
     echo \* $DEVPATH: does not exist, ignore
 fi
 
-# Was the $DRIVER properly initialized?
-WELLSPRING=`dmesg|grep $DRIVER|grep Wellspring`
-if [ "$WELLSPRING" != "" ]; then
-    echo \* $DRIVER: Wellspring was initialized
-else
-    echo \* $DRIVER: Wellspring was NOT initialized
-    exit 1
-fi
-
 # Do we have synaptics working properly?
 typeset -i SYNLINES=`synclient -l|wc -l`
 if [ $SYNLINES -gt 10 ]; then
