@@ -9,7 +9,7 @@ Standing in the source directory, do:
 
 3. sudo ./scripts/bcm5974-post-install
 
-4. reboot (only if bcm5974 never was used before)
+4. reboot (or reload the bcm5974 module if already installed)
 
 For trouble-shooting, try running
 

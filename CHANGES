@@ -1,78 +1,102 @@
-08JUL2008 version 0.54
-----------------------
+bcm5974 (0.55) unstable; urgency=low
 
-And another one... finally got the bright idea to test it by emulating
-the different product ids.
+  * Package updates.
+  * Reverting GFP_ATOMIC for irq handlers.
 
-07JUL2008 version 0.53
-----------------------
+ -- Henrik Rydberg <rydberg@euromail.se>  Wed, 09 Jul 2008 20:59:39 +0200
 
-Another typo in the post-install script.
+bcm5974 (0.54) unstable; urgency=low
 
-07JUL2008 version 0.52
-----------------------
+  * And another one... finally got the bright idea to test it by
+    emulating the different product ids.
 
-Typo in the post-install script.
+ -- Henrik Rydberg <rydberg@euromail.se>  Tue, 08 Jul 2008 20:59:39 +0200
 
-07JUL2008 version 0.51
-----------------------
+bcm5974 (0.53) unstable; urgency=low
 
-Fine-tuned signal-to-noise ratio, smoother mouse motion.
-Interrupt code got minor simplifications.
-GFP_ATOMIC completetly removed.
+  * Another typo in the post-install script.
 
-06JUL2008 version 0.5
-----------------------
+ -- Henrik Rydberg <rydberg@euromail.se>  Mon, 07 Jul 2008 20:59:39 +0200
 
-Working palm detection, changes for kernel.org, dkms introduced.
+bcm5974 (0.52) unstable; urgency=low
 
-01JUL2008 version 0.42
-----------------------
+  * Typo in the post-install script.
 
-First button click registered, pre/post-reset added.
+ -- Henrik Rydberg <rydberg@euromail.se>  Mon, 07 Jul 2008 20:09:39 +0200
 
-29JUN2008 version 0.41
-----------------------
+bcm5974 (0.51) unstable; urgency=low
 
-The reset_resume kernel function added.
+  * Fine-tuned signal-to-noise ratio, smoother mouse motion.
+  * Interrupt code got minor simplifications.
+  * GFP_ATOMIC completetly removed.
 
-29JUN2008 version 0.4
-----------------------
+ -- Henrik Rydberg <rydberg@euromail.se>  Mon, 07 Jul 2008 18:09:39 +0200
 
-Both finger pressure and width reported.
+bcm5974 (0.5) unstable; urgency=low
 
-27JUN2008 version 0.31
-----------------------
+  * Working palm detection
+  * Changes for kernel.org
+  * DKMS introduced.
 
-Administrative changes for kernel.org.
+ -- Henrik Rydberg <rydberg@euromail.se>  Sun, 06 Jul 2008 20:59:39 +0200
 
-27JUN2008 version 0.3
-----------------------
+bcm5974 (0.42) unstable; urgency=low
 
-Explicit device structure, use all packages.
+  * First button click registered.
+  * Hooks pre/post-reset added.
 
-27JUN2008 version 0.23
-----------------------
+ -- Henrik Rydberg <rydberg@euromail.se>  Tue, 01 Jul 2008 20:59:39 +0200
 
-Finger release not reported properly.
+bcm5974 (0.41) unstable; urgency=low
 
-26JUN2008 version 0.22
-----------------------
+  * The reset_resume kernel function added.
 
-ABS coordinates more stable with synaptics.
+ -- Henrik Rydberg <rydberg@euromail.se>  Sun, 29 Jun 2008 20:59:39 +0200
+	
+bcm5974 (0.4) unstable; urgency=low
 
-25JUN2008 version 0.21
-----------------------
+  * Both finger pressure and width reported.
 
-Fixed the relative coordinate scaling.
+ -- Henrik Rydberg <rydberg@euromail.se>  Sun, 29 Jun 2008 18:59:39 +0200
 
-25JUN2008 version 0.2
-----------------------
+bcm5974 (0.31) unstable; urgency=low
 
-Misinterpreted pressure input, noise reduction.
+  * Administrative changes for kernel.org.
 
-24JUN2008 version 0.1
-----------------------
+ -- Henrik Rydberg <rydberg@euromail.se>  Fri, 27 Jun 2008 20:59:39 +0200
 
-First version.
+bcm5974 (0.3) unstable; urgency=low
 
+  * Explicit device structure, use all packages.
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Fri, 27 Jun 2008 18:59:39 +0200
+
+bcm5974 (0.23) unstable; urgency=low
+
+  * Finger release not reported properly.
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Fri, 27 Jun 2008 17:59:39 +0200
+
+bcm5974 (0.22) unstable; urgency=low
+
+  * ABS coordinates more stable with synaptics.
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Thu, 26 Jun 2008 20:59:39 +0200
+
+bcm5974 (0.21) unstable; urgency=low
+
+  * Fixed the relative coordinate scaling.
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Wed, 25 Jun 2008 20:59:39 +0200
+
+bcm5974 (0.2) unstable; urgency=low
+
+  * Misinterpreted pressure input, noise reduction.
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Wed, 25 Jun 2008 20:59:39 +0200
+
+bcm5974 (0.1) unstable; urgency=low
+
+  * First version.
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Tue, 24 Jun 2008 20:59:39 +0200

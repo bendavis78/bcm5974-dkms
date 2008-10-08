@@ -167,7 +167,7 @@ struct atp {
 #define DIM_Y		800		/* maximum trackpad y value */
 
 /* logical signal quality */
-#define SN_PRESSURE	40		/* pressure signal-to-noise ratio */
+#define SN_PRESSURE	45		/* pressure signal-to-noise ratio */
 #define SN_WIDTH	100		/* width signal-to-noise ratio */
 #define SN_COORD	250		/* coordinate signal-to-noise ratio */
 
@@ -385,7 +385,7 @@ static void irq_button(struct urb *urb)
 	input_sync(dev->input);
 
 exit:
-	error = usb_submit_urb(dev->bt_urb, GFP_KERNEL);
+	error = usb_submit_urb(dev->bt_urb, GFP_ATOMIC);
 	if (error)
 		err("bcm5974: button urb failed: %d", error);
 }
@@ -424,7 +424,7 @@ static void irq_trackpad(struct urb *urb)
 	input_sync(dev->input);
 
 exit:
-	error = usb_submit_urb(dev->tp_urb, GFP_KERNEL);
+	error = usb_submit_urb(dev->tp_urb, GFP_ATOMIC);
 	if (error)
 		err("bcm5974: trackpad urb failed: %d", error);
 }

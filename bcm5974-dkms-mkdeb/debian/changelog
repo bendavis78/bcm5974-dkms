@@ -1,6 +1,6 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * Automatically packaged by DKMS.
+  * Package updates.
+  * Reverting GFP_ATOMIC for irq handlers.
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP
-
