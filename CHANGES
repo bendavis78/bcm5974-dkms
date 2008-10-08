@@ -1,3 +1,9 @@
+bcm5974 (0.61) unstable; urgency=low
+
+  * Smoother motion in mouse interface
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Mon, 01 Sep 2008 21:01:24 +0200
+
 bcm5974 (0.60) unstable; urgency=low
 
   * New default mouse driver mode

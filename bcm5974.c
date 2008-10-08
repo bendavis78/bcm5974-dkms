@@ -172,8 +172,10 @@ struct bcm5974_config {
 /* mouse driver state */
 struct bcm5974_mouse_state {
 	int fingers;			/* number of fingers on trackpad */
-	int wheel;			/* vertical wheel counter */
-	int hwheel;			/* horizontal wheel counter */
+	int rel_x;			/* horizontal relative counter */
+	int rel_y;			/* vertical relative counter */
+	int wheel_x;			/* horizontal wheel counter */
+	int wheel_y;			/* vertical wheel counter */
 };
 
 /* logical device structure */
@@ -276,8 +278,8 @@ static void setup_events_to_report(struct input_dev *input_dev,
 		__set_bit(EV_REL, input_dev->evbit);
 		__set_bit(REL_X, input_dev->relbit);
 		__set_bit(REL_Y, input_dev->relbit);
-		__set_bit(REL_WHEEL, input_dev->relbit);
 		__set_bit(REL_HWHEEL, input_dev->relbit);
+		__set_bit(REL_WHEEL, input_dev->relbit);
 		__set_bit(BTN_MIDDLE, input_dev->keybit);
 		__set_bit(BTN_RIGHT, input_dev->keybit);
 		break;
@@ -363,7 +365,7 @@ static void update_tp_mouse_state(struct input_dev *dev,
 				const struct tp_finger *f,
 				int p, int n)
 {
-	int dx = 0, dy = 0, sx = 0, sy = 0, sw = 0, shw = 0;
+	int dx = 0, dy = 0, sx = 0, sy = 0, swx = 0, swy = 0;
 
 	if (f) {
 		dx = raw2int(f->rel_x);
@@ -376,30 +378,38 @@ static void update_tp_mouse_state(struct input_dev *dev,
 
 	if (n >= 3) {
 		/* swipe */
-		ms->wheel = 0;
-		ms->hwheel += int2scale(&c->x, dx);
-		shw = ms->hwheel / mouse_hwheel_damping;
-		ms->hwheel -= shw * mouse_hwheel_damping;
+		ms->rel_x = 0;
+		ms->rel_y = 0;
+		ms->wheel_x += int2scale(&c->x, dx);
+		ms->wheel_y = 0;
+		swx = ms->wheel_x / mouse_hwheel_damping;
+		ms->wheel_x -= swx * mouse_hwheel_damping;
 	} else if (n == 2) {
 		/* scroll */
-		ms->wheel += int2scale(&c->y, dy);
-		ms->hwheel = 0;
-		sw = ms->wheel / mouse_wheel_damping;
-		ms->wheel -= sw * mouse_wheel_damping;
+		ms->rel_x = 0;
+		ms->rel_y = 0;
+		ms->wheel_x = 0;
+		ms->wheel_y += int2scale(&c->y, dy);
+		swy = ms->wheel_y / mouse_wheel_damping;
+		ms->wheel_y -= swy * mouse_wheel_damping;
 	} else {
 		/* pointer */
-		ms->wheel = 0;
-		ms->hwheel = 0;
-		sx = int2scale(&c->x, dx) / mouse_motion_damping;
-		sy = int2scale(&c->y, -dy) / mouse_motion_damping;
+		ms->rel_x += int2scale(&c->x, dx);
+		ms->rel_y += int2scale(&c->y, -dy);
+		ms->wheel_x = 0;
+		ms->wheel_y = 0;
+		sx = ms->rel_x / mouse_motion_damping;
+		sy = ms->rel_y / mouse_motion_damping;
+		ms->rel_x -= sx * mouse_motion_damping;
+		ms->rel_y -= sy * mouse_motion_damping;
 	}
 
 	ms->fingers = n;
 
 	input_report_rel(dev, REL_X, sx);
 	input_report_rel(dev, REL_Y, sy);
-	input_report_rel(dev, REL_WHEEL, sw);
-	input_report_rel(dev, REL_HWHEEL, shw);
+	input_report_rel(dev, REL_HWHEEL, swx);
+	input_report_rel(dev, REL_WHEEL, swy);
 }
 
 /* update logical touchpad state */

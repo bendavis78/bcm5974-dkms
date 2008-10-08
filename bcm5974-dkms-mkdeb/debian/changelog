@@ -1,6 +1,5 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * New default mouse driver mode
-  * Mouse configuration parameters
+  * Smoother motion in mouse interface
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP
