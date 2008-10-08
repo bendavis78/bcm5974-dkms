@@ -1,6 +1,5 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * Compatibility mode reverted
-  * BTN_TOUCH event added for mousedev
+  * Finger counting improved further
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP

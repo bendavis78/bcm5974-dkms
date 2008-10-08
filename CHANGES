@@ -1,3 +1,15 @@
+bcm5974 (0.64) unstable; urgency=low
+
+  * Finger counting improved further
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Wed, 03 Sep 2008 21:58:38 +0200
+
+bcm5974 (0.63) unstable; urgency=low
+
+  * Finger pressure hysteresis added
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Wed, 03 Sep 2008 13:26:29 +0200
+
 bcm5974 (0.62) unstable; urgency=low
 
   * Compatibility mode reverted
