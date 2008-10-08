@@ -1,0 +1,241 @@
+#!/bin/bash
+#
+# bcm5943-diagnostics - troubleshooting the BCM5974 setup
+#
+# Copyright (C) 2008	   Henrik Rydberg (rydberg@euromail.se)
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+
+DRIVER=bcm5974
+
+echo -----------------------------------------------------------------------
+
+# What kernel version am I running?
+KERNEL=`uname -r`
+echo \* Kernel version: $KERNEL
+
+# What synaptics version is installed (debian)?
+if [ -x /usr/bin/dpkg-query ]; then
+    SYNAPTICS=`/usr/bin/dpkg-query -W -f='${Version}\n' xserver-xorg-input-synaptics`
+    echo \* Synaptics version: $SYNAPTICS
+else
+    echo \* Synaptics version: UNKNOWN - dpkg not found
+fi
+
+# What USB devices of interest can we find?
+if [ -x /usr/sbin/lsusb ]; then
+    LSUSB=`lsusb|grep 05ac:02`
+    echo \* USB device: $LSUSB
+else
+    echo \* USB device: UNKNOWN - lsusb not found
+fi
+
+# Do we have the module intalled?
+MODLIB=/lib/modules/$KERNEL/kernel/drivers/input/mouse/$DRIVER.ko
+MODLIB2=/lib/modules/$KERNEL/updates/dkms/$DRIVER.ko
+if [ -f $MODLIB ]; then
+    echo \* $MODLIB: exists
+elif [ -f $MODLIB2 ]; then
+    echo \* $MODLIB2: exists
+else
+    echo \* $DRIVER does NOT exist
+    echo dkms: install package
+    echo manual: copy the file $DRIVER.ko to $MODLIB
+    exit 1
+fi
+
+# Do we have the module configured?
+MODULES=/etc/modules
+if [ -f $MODULES ]; then
+    if (grep -q $DRIVER $MODULES); then
+        echo \* $MODULES: has $DRIVER config, please remove
+        exit 1
+    else
+        echo \* $MODULES: $DRIVER no longer explicitly listed, good
+    fi
+fi
+
+# Do we have old quirks?
+MODPROBE=/etc/modprobe.d/options
+if [ -f $MODPROBE ]; then
+    MODPROBEOPTS=`grep quirks= $MODPROBE|grep -v ^#|grep 0x05ac:0x02`
+    if [ "$MODPROBEOPTS" != "" ]; then
+        echo \* $MODPROBE: has obsolete quirks - please remove
+        exit 1
+    else
+        echo \* $MODPROBE: no obsolete quirks, good
+    fi
+else
+    echo \* $MODPROBE: file not found
+fi
+
+# Do we have the right quirks?
+DRIVMOD=/etc/modprobe.d/$DRIVER
+if [ -f $DRIVMOD ]; then
+    DRIVMODOPTS=`grep quirks= $DRIVMOD|grep -v ^#|grep 0x05ac:0x02`
+    if [ "$DRIVMODOPTS" != "" ]; then
+        echo \* $DRIVMOD: has quirks, good
+    else
+        echo \* $DRIVMOD: does NOT have quirks
+        echo Uncomment the right quirk line in $DRIVMOD
+        exit 1
+    fi
+else
+    echo \* $DRIVMOD: file not found
+    echo Copy the etc/modprobe.d/bcm5974 file to /etc/modprobe.d/
+    exit 1
+fi
+
+# Did the depmod bite?
+USBMAP=/lib/modules/$KERNEL/modules.usbmap
+if [ -f $USBMAP ]; then
+    typeset -i nusb=`grep $DRIVER $USBMAP|grep 0x05ac|grep 0x02|wc -l`
+    if [ $nusb -gt 0 ]; then
+        echo \* $USBMAP: maps to $DRIVER, good
+    else
+        echo \* $USBMAP: does NOT map to $DRIVER
+        echo Run depmod -a as root
+        exit 1
+    fi
+fi      
+
+# Was the $DRIVER module loaded?
+DMESG=`lsmod|grep $DRIVER`
+if [ "$DMESG" != "" ]; then
+    echo \* $DRIVER: module is loaded
+else
+    echo \* $DRIVER: module is NOT loaded
+    echo Add this line to /etc/modules:
+    echo "$DRIVER"
+    exit 1
+fi
+
+# Was the $DRIVER module registered?
+DEVPATH=/proc/bus/input/devices
+if [ -f $DEVPATH ]; then
+    DEVICES=`grep $DRIVER /proc/bus/input/devices`
+    if [ "$DEVICES" != "" ]; then
+        echo \* $DEVPATH: module is registered
+    else
+        echo \* $DEVPATH: module is NOT registered
+        echo No help on this one...
+        exit 1
+    fi
+else
+    echo \* $DEVPATH: does not exist, ignore
+fi
+
+# Was the $DRIVER properly initialized?
+WELLSPRING=`dmesg|grep $DRIVER|grep Wellspring`
+if [ "$WELLSPRING" != "" ]; then
+    echo \* $DRIVER: Wellspring was initialized
+else
+    echo \* $DRIVER: Wellspring was NOT initialized
+    exit 1
+fi
+
+# Do we have synaptics working properly?
+typeset -i SYNLINES=`synclient -l|wc -l`
+if [ $SYNLINES -gt 10 ]; then
+    echo \* synaptics: configuration readable
+else
+    echo \* synaptics: configuration NOT readable
+    exit 1
+fi
+
+# Do we have a working synaptics configuration?
+DIFF=/tmp/synclient-output.diff.$$
+TMP=/tmp/synclient-output.txt.$$
+synclient -l | grep -v Parameter | sort > $TMP
+diff -u - $TMP > $DIFF <<EOF
+    AccelFactor             = 0.1
+    BottomEdge              = 800
+    CircScrollDelta         = 0.1
+    CircScrollTrigger       = 0
+    CircularPad             = 0
+    CircularScrolling       = 0
+    ClickTime               = 100
+    CoastingSpeed           = 0
+    CornerCoasting          = 0
+    EdgeMotionMaxSpeed      = 80
+    EdgeMotionMaxZ          = 160
+    EdgeMotionMinSpeed      = 1
+    EdgeMotionMinZ          = 30
+    EdgeMotionUseAlways     = 0
+    EmulateMidButtonTime    = 75
+    EmulateTwoFingerMinZ    = 257
+    FastTaps                = 0
+    FingerHigh              = 80
+    FingerLow               = 16
+    FingerPress             = 256
+    GrabEventDevice         = 1
+    GuestMouseOff           = 0
+    HorizEdgeScroll         = 0
+    HorizScrollDelta        = 0
+    HorizTwoFingerScroll    = 1
+    LBCornerButton          = 0
+    LeftEdge                = 0
+    LeftRightScrolling      = 1
+    LeftRightScrollRepeat   = 1
+    LockedDrags             = 0
+    LockedDragTimeout       = 5000
+    LTCornerButton          = 0
+    MaxDoubleTapTime        = 200
+    MaxSpeed                = 1.2
+    MaxTapMove              = 100
+    MaxTapTime              = 223
+    MinSpeed                = 0.8
+    MultiFingerButton       = 2
+    PalmDetect              = 0
+    PalmMinWidth            = 10
+    PalmMinZ                = 200
+    PressureMotionMaxFactor = 1
+    PressureMotionMaxZ      = 160
+    PressureMotionMinFactor = 1
+    PressureMotionMinZ      = 10
+    RBCornerButton          = 0
+    RightEdge               = 1280
+    RTCornerButton          = 0
+    ScrollButtonRepeat      = 100
+    SingleTapTimeout        = 180
+    TapButton1              = 0
+    TapButton2              = 0
+    TapButton3              = 0
+    TopEdge                 = 0
+    TouchpadOff             = 0
+    TrackstickSpeed         = 40
+    UpDownScrolling         = 1
+    UpDownScrollRepeat      = 1
+    VertEdgeScroll          = 0
+    VertScrollDelta         = 40
+    VertTwoFingerScroll     = 1
+EOF
+rm -f $TMP
+
+echo =======================================================================
+echo The bcm5974 seems properly configured
+
+typeset -i NDIFF=`cat $DIFF|wc -l`
+if [ $NDIFF -gt 0 ]; then
+    echo
+    echo Your synaptics settings differ from the bcm5974 default:
+    echo -----------------------------------------------------------------------
+    tail -n +4 $DIFF
+    echo -----------------------------------------------------------------------
+    echo If in doubt, please check your /etc/X11/xorg.conf settings
+fi
+
+rm -f $DIFF

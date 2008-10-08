@@ -1,0 +1,17 @@
+Installation instructions bcm5974
+----------------------------------
+
+Standing in the source directory, do:
+
+1. make -C /lib/modules/`uname -r`/build M=$PWD modules
+
+2. sudo cp bcm5974.ko /lib/modules/`uname -r`/kernel/drivers/input/mouse/
+
+3. sudo ./scripts/bcm5974-post-install
+
+4. reboot (only if bcm5974 never was used before)
+
+For trouble-shooting, try running
+
+ ./scripts/bcm5974-diagnostics
+

@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# bcm5943-post-install - post-installing the BCM5974
+#
+# Copyright (C) 2008	   Henrik Rydberg (rydberg@euromail.se)
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+
+DRIVER=bcm5974
+ETCPATH=/etc/modprobe.d/$DRIVER
+
+echo -----------------------------------------------------------------------
+
+DIR=`dirname $0`
+PAT_HEAD="options usbhid quirks="
+PAT_MBA="0x05ac:0x022"
+PAT_MBP="0x05ac:0x023"
+MATCH_MBA=$PAT_HEAD$PAT_MBA
+MATCH_MBB=$PAT_HEAD$PAT_MBB
+
+if [ -x /usr/sbin/lsusb ]; then
+    if [ "lsusb|grep $PAT_MBA" != "" ]; then
+        SED="s/#$MATCH_MBA/$MATCH_MBA/"
+    elif [ $has_mbb -gt 0 ]; then
+        SED="s/#$MATCH_MBP/$MATCH_MBP/"
+    else
+        echo No suitable device found
+        exit 1
+    fi
+else
+    echo \* USB device: UNKNOWN - lsusb not found
+    exit 1
+fi
+
+cat $DIR/..$ETCPATH | sed "$SED" > $ETCPATH
+
+exit 0

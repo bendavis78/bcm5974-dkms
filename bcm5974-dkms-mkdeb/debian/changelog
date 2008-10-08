@@ -1,0 +1,6 @@
+MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
+
+  * Automatically packaged by DKMS.
+
+ -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP
+
