@@ -404,14 +404,33 @@ exit:
 		err("bcm5974: trackpad urb failed: %d", error);
 }
 
+/*
+ * The Wellspring trackpad, like many recent Apple trackpads, share
+ * the usb device with the keyboard. Since keyboards are usually
+ * handled by the HID system, the device ends up being handled by two
+ * modules. Setting up the device therefore becomes slightly
+ * complicated. To enable multitouch features, a mode switch is
+ * required, which is usually applied via the control interface of the
+ * device.  It can be argued where this switch should take place. In
+ * some drivers, like appletouch, the switch is made during
+ * probe. However, the hid module may also alter the state of the
+ * device, resulting in trackpad malfunction under certain
+ * circumstances. To get around this problem, there is at least one
+ * example that utilizes the USB_QUIRK_RESET_RESUME quirk in order to
+ * recieve a reset_resume request rather than the normal resume. Since
+ * the implementation of reset_resume is equal to mode switch plus
+ * open, it seems easier to always do the switch while opening the
+ * device.
+ */
 static int atp_open(struct input_dev *input)
 {
 	struct atp *dev = input_get_drvdata(input);
 
 	if (!dev->open) {
-		if (atp_wellspring_mode(dev))
-			printk(KERN_INFO "bcm5974: mode switch failed\n");
-
+		if (atp_wellspring_mode(dev)) {
+			dprintk(1, "bcm5974: mode switch failed\n");
+			goto error;
+		}
 		if (usb_submit_urb(dev->bt_urb, GFP_KERNEL))
 			goto error;
 		if (usb_submit_urb(dev->tp_urb, GFP_KERNEL))
@@ -609,6 +628,7 @@ static struct usb_driver atp_driver = {
 	.disconnect = atp_disconnect,
 	.suspend = atp_suspend,
 	.resume = atp_resume,
+	.reset_resume = atp_resume,
 	.id_table = atp_table,
 };
 

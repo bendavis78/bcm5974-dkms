@@ -1,3 +1,10 @@
+bcm5974 (0.57) unstable; urgency=low
+
+  * Keep reset_resume around
+  * Submitted to kernel.org
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Fri, 18 Jul 2008 02:42:52 +0200
+
 bcm5974 (0.56) unstable; urgency=low
 
   * Leave device initialization to hid; use mode-switch only
