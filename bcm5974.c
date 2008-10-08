@@ -234,8 +234,8 @@ static inline int int2bound(const struct bcm5974_param *p, int x)
 {
 	int s = int2scale(p, x);
 
-//	return clamp_val(s, 0, p->dim - 1);
-	return s < 0 ? 0 : s >= p->dim ? p->dim - 1 : s;
+        //return clamp_val(s, 0, p->dim - 1);
+        return s < 0 ? 0 : s >= p->dim ? p->dim - 1 : s;
 }
 
 /* setup which logical events to report */
@@ -352,8 +352,9 @@ static int report_tp_state(struct bcm5974 *dev, int size)
 #define BCM5974_WELLSPRING_MODE_REQUEST_VALUE		0x300
 #define BCM5974_WELLSPRING_MODE_REQUEST_INDEX		0
 #define BCM5974_WELLSPRING_MODE_VENDOR_VALUE		0x01
+#define BCM5974_WELLSPRING_MODE_NORMAL_VALUE		0x08
 
-static int bcm5974_wellspring_mode(struct bcm5974 *dev)
+static int bcm5974_wellspring_mode(struct bcm5974 *dev, bool on)
 {
 	char *data = kmalloc(8, GFP_KERNEL);
 	int retval = 0, size;
@@ -378,7 +379,9 @@ static int bcm5974_wellspring_mode(struct bcm5974 *dev)
 	}
 
 	/* apply the mode switch */
-	data[0] = BCM5974_WELLSPRING_MODE_VENDOR_VALUE;
+	data[0] = on ?
+		BCM5974_WELLSPRING_MODE_VENDOR_VALUE :
+		BCM5974_WELLSPRING_MODE_NORMAL_VALUE;
 
 	/* write configuration */
 	size = usb_control_msg(dev->udev, usb_sndctrlpipe(dev->udev, 0),
@@ -393,7 +396,8 @@ static int bcm5974_wellspring_mode(struct bcm5974 *dev)
 		goto out;
 	}
 
-	dprintk(2, "bcm5974: switched to wellspring mode.\n");
+	dprintk(2, "bcm5974: switched to %s mode.\n",
+		on ? "wellspring" : "normal");
 
  out:
 	kfree(data);
@@ -482,7 +486,7 @@ exit:
  */
 static int bcm5974_start_traffic(struct bcm5974 *dev)
 {
-	if (bcm5974_wellspring_mode(dev)) {
+	if (bcm5974_wellspring_mode(dev, true)) {
 		dprintk(1, "bcm5974: mode switch failed\n");
 		goto error;
 	}
@@ -505,6 +509,7 @@ static void bcm5974_pause_traffic(struct bcm5974 *dev)
 {
 	usb_kill_urb(dev->tp_urb);
 	usb_kill_urb(dev->bt_urb);
+	bcm5974_wellspring_mode(dev, false);
 }
 
 /*
