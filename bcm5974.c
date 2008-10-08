@@ -377,7 +377,7 @@ static void irq_button(struct urb *urb)
 	}
 
 	if (report_bt_state(dev, dev->bt_urb->actual_length)) {
-		dprintk(1, "bcm5974: bad button package, length: %d)\n",
+		dprintk(1, "bcm5974: bad button package, length: %d\n",
 			dev->bt_urb->actual_length);
 		goto exit;
 	}
@@ -416,7 +416,7 @@ static void irq_trackpad(struct urb *urb)
 	}
 
 	if (report_tp_state(dev, dev->tp_urb->actual_length)) {
-		dprintk(1, "bcm5974: bad trackpad package, length: %d)\n",
+		dprintk(1, "bcm5974: bad trackpad package, length: %d\n",
 			dev->tp_urb->actual_length);
 		goto exit;
 	}

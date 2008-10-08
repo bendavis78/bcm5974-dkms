@@ -29,7 +29,7 @@ PAT_HEAD="options usbhid quirks="
 PAT_MBA="0x05ac:0x022"
 PAT_MBP="0x05ac:0x023"
 MATCH_MBA=$PAT_HEAD$PAT_MBA
-MATCH_MBB=$PAT_HEAD$PAT_MBB
+MATCH_MBP=$PAT_HEAD$PAT_MBP
 
 if [ -x /usr/sbin/lsusb ]; then
     if [ "lsusb|grep $PAT_MBA" != "" ]; then

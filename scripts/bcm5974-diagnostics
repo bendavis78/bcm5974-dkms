@@ -131,7 +131,7 @@ if [ -f $DEVPATH ]; then
         echo \* $DEVPATH: module is registered
     else
         echo \* $DEVPATH: module is NOT registered
-        echo No help on this one...
+        echo "Please double-check the quirks settings in $DRIVMOD"
         exit 1
     fi
 else
