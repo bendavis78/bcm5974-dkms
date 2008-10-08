@@ -1,6 +1,6 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * Cleanup patch from Dmitry Torokhov
-  * Auto-suspend patch from Dmitry Torokhov
+  * New default mouse driver mode
+  * Mouse configuration parameters
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP

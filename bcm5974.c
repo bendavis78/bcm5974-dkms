@@ -63,7 +63,7 @@
 }
 
 /* table of devices that work with this driver */
-static const struct usb_device_id bcm5974_table [] = {
+static const struct usb_device_id bcm5974_table[] = {
 	/* MacbookAir1.1 */
 	BCM5974_DEVICE(USB_DEVICE_ID_APPLE_WELLSPRING_ANSI),
 	BCM5974_DEVICE(USB_DEVICE_ID_APPLE_WELLSPRING_ISO),
@@ -84,9 +84,32 @@ MODULE_LICENSE("GPL");
 #define dprintk(level, format, a...)\
 	{ if (debug >= level) printk(KERN_DEBUG format, ##a); }
 
+#define MODE_MOUSE	1
+#define MODE_TOUCHPAD	2
+
 static int debug = 1;
 module_param(debug, int, 0644);
 MODULE_PARM_DESC(debug, "Activate debugging output");
+
+static int driver_mode = MODE_MOUSE;
+module_param(driver_mode, int, 0644);
+MODULE_PARM_DESC(driver_mode, "Driver mode (1 - mouse; 2 - touchpad)");
+
+static int mouse_motion_damping = 8;
+module_param(mouse_motion_damping, int, 0644);
+MODULE_PARM_DESC(mouse_motion_damping, "Mouse motion damping");
+
+static int mouse_wheel_damping = 256;
+module_param(mouse_wheel_damping, int, 0644);
+MODULE_PARM_DESC(mouse_wheel_damping, "Vertical mouse wheel damping");
+
+static int mouse_hwheel_damping = 256;
+module_param(mouse_hwheel_damping, int, 0644);
+MODULE_PARM_DESC(mouse_hwheel_damping, "Horizontal mouse wheel damping");
+
+static int mouse_button_mode = 2;
+module_param(mouse_button_mode, int, 0644);
+MODULE_PARM_DESC(mouse_button_mode, "Mouse button mode (1 - unix; 2 - macos)");
 
 /* button data structure */
 struct bt_data {
@@ -146,6 +169,13 @@ struct bcm5974_config {
 	struct bcm5974_param y;	/* vertical limits */
 };
 
+/* mouse driver state */
+struct bcm5974_mouse_state {
+	int fingers;			/* number of fingers on trackpad */
+	int wheel;			/* vertical wheel counter */
+	int hwheel;			/* horizontal wheel counter */
+};
+
 /* logical device structure */
 struct bcm5974 {
 	char phys[64];
@@ -159,6 +189,7 @@ struct bcm5974 {
 	struct bt_data *bt_data;	/* button transferred data */
 	struct urb *tp_urb;		/* trackpad usb request block */
 	struct tp_data *tp_data;	/* trackpad transferred data */
+	struct bcm5974_mouse_state ms;	/* mouse state */
 };
 
 /* logical dimensions */
@@ -229,79 +260,204 @@ static inline int int2bound(const struct bcm5974_param *p, int x)
 {
 	int s = int2scale(p, x);
 
-//	return clamp_val(s, 0, p->dim - 1);
-	return s < 0 ? 0 : s >= p->dim ? p->dim - 1 : s;
+//      return clamp_val(s, 0, p->dim - 1);
+        return s < 0 ? 0 : s >= p->dim ? p->dim - 1 : s;
 }
 
 /* setup which logical events to report */
 static void setup_events_to_report(struct input_dev *input_dev,
 				   const struct bcm5974_config *cfg)
 {
-	__set_bit(EV_ABS, input_dev->evbit);
-
-	input_set_abs_params(input_dev, ABS_PRESSURE,
-				0, cfg->p.dim, cfg->p.fuzz, 0);
-	input_set_abs_params(input_dev, ABS_TOOL_WIDTH,
-				0, cfg->w.dim, cfg->w.fuzz, 0);
-	input_set_abs_params(input_dev, ABS_X,
-				0, cfg->x.dim, cfg->x.fuzz, 0);
-	input_set_abs_params(input_dev, ABS_Y,
-				0, cfg->y.dim, cfg->y.fuzz, 0);
-
 	__set_bit(EV_KEY, input_dev->evbit);
-	__set_bit(BTN_TOOL_FINGER, input_dev->keybit);
-	__set_bit(BTN_TOOL_DOUBLETAP, input_dev->keybit);
-	__set_bit(BTN_TOOL_TRIPLETAP, input_dev->keybit);
 	__set_bit(BTN_LEFT, input_dev->keybit);
+
+	switch (driver_mode) {
+	case MODE_MOUSE:
+		__set_bit(EV_REL, input_dev->evbit);
+		__set_bit(REL_X, input_dev->relbit);
+		__set_bit(REL_Y, input_dev->relbit);
+		__set_bit(REL_WHEEL, input_dev->relbit);
+		__set_bit(REL_HWHEEL, input_dev->relbit);
+		__set_bit(BTN_MIDDLE, input_dev->keybit);
+		__set_bit(BTN_RIGHT, input_dev->keybit);
+		break;
+	case MODE_TOUCHPAD:
+		__set_bit(EV_ABS, input_dev->evbit);
+		__set_bit(BTN_TOOL_FINGER, input_dev->keybit);
+		__set_bit(BTN_TOOL_DOUBLETAP, input_dev->keybit);
+		__set_bit(BTN_TOOL_TRIPLETAP, input_dev->keybit);
+
+		input_set_abs_params(input_dev, ABS_PRESSURE,
+					0, cfg->p.dim, cfg->p.fuzz, 0);
+		input_set_abs_params(input_dev, ABS_TOOL_WIDTH,
+					0, cfg->w.dim, cfg->w.fuzz, 0);
+		input_set_abs_params(input_dev, ABS_X,
+					0, cfg->x.dim, cfg->x.fuzz, 0);
+		input_set_abs_params(input_dev, ABS_Y,
+					0, cfg->y.dim, cfg->y.fuzz, 0);
+		break;
+	}
 }
 
-/* report button data as logical button state */
+/* update logical mouse button state */
+static void update_bt_mouse_state(struct input_dev *dev,
+				const struct bcm5974_mouse_state *ms,
+				const struct bt_data *bt)
+{
+	const int n = ms->fingers;
+
+	bool left, middle, right;
+	switch (mouse_button_mode) {
+	case 1:
+		left = n <= 1 && bt->button;
+		middle = n == 2 && bt->button;
+		right = n >= 3 && bt->button;
+		break;
+	case 2:
+		left = n <= 1 && bt->button;
+		middle = n >= 3 && bt->button;
+		right = n == 2 && bt->button;
+		break;
+	default:
+		left = bt->button;
+		middle = false;
+		right = false;
+		break;
+	};
+	input_report_key(dev, BTN_LEFT, left);
+	input_report_key(dev, BTN_MIDDLE, middle);
+	input_report_key(dev, BTN_RIGHT, right);
+}
+
+/* update logical touchpad button state */
+static void update_bt_touchpad_state(struct input_dev *dev,
+				const struct bt_data *bt)
+{
+	input_report_key(dev, BTN_LEFT, bt->button);
+}
+
+/* report button data as logical mouse/touchpad button state */
 static int report_bt_state(struct bcm5974 *dev, int size)
 {
 	if (size != sizeof(struct bt_data))
 		return -EIO;
 
-	input_report_key(dev->input, BTN_LEFT, dev->bt_data->button);
+	switch (driver_mode) {
+	case MODE_MOUSE:
+		update_bt_mouse_state(dev->input, &dev->ms, dev->bt_data);
+		break;
+	case MODE_TOUCHPAD:
+		update_bt_touchpad_state(dev->input, dev->bt_data);
+		break;
+	}
+
 	input_sync(dev->input);
 
 	return 0;
 }
 
-/* report trackpad data as logical trackpad state */
-static int report_tp_state(struct bcm5974 *dev, int size)
+/* update logical mouse motion state */
+static void update_tp_mouse_state(struct input_dev *dev,
+				struct bcm5974_mouse_state *ms,
+				const struct bcm5974_config *c,
+				const struct tp_finger *f,
+				int p, int n)
 {
-	const struct bcm5974_config *c = &dev->cfg;
-	const struct tp_finger *f = dev->tp_data->finger;
-	struct input_dev *input = dev->input;
-	const int fingers = (size - 26) / 28;
-	int p = 0, w, x, y, n = 0;
+	int dx = 0, dy = 0, sx = 0, sy = 0, sw = 0, shw = 0;
 
-	if (size < 26 || (size - 26) % 28 != 0)
-		return -EIO;
+	if (f) {
+		dx = raw2int(f->rel_x);
+		dy = raw2int(f->rel_y);
 
-	if (fingers) {
-		p = raw2int(f->force_major);
+		dprintk(9,
+			"bcm5974: p: %+05d dx: %+05d dy: %+05d n: %d\n",
+			p, dx, dy, n);
+	}
+
+	if (n >= 3) {
+		/* swipe */
+		ms->wheel = 0;
+		ms->hwheel += int2scale(&c->x, dx);
+		shw = ms->hwheel / mouse_hwheel_damping;
+		ms->hwheel -= shw * mouse_hwheel_damping;
+	} else if (n == 2) {
+		/* scroll */
+		ms->wheel += int2scale(&c->y, dy);
+		ms->hwheel = 0;
+		sw = ms->wheel / mouse_wheel_damping;
+		ms->wheel -= sw * mouse_wheel_damping;
+	} else {
+		/* pointer */
+		ms->wheel = 0;
+		ms->hwheel = 0;
+		sx = int2scale(&c->x, dx) / mouse_motion_damping;
+		sy = int2scale(&c->y, -dy) / mouse_motion_damping;
+	}
+
+	ms->fingers = n;
+
+	input_report_rel(dev, REL_X, sx);
+	input_report_rel(dev, REL_Y, sy);
+	input_report_rel(dev, REL_WHEEL, sw);
+	input_report_rel(dev, REL_HWHEEL, shw);
+}
+
+/* update logical touchpad state */
+static void update_tp_touchpad_state(struct input_dev *dev,
+				const struct bcm5974_config *c,
+				const struct tp_finger *f,
+				int p, int n)
+{
+	int w, x, y;
+
+	if (f) {
 		w = raw2int(f->size_major);
 		x = raw2int(f->abs_x);
 		y = raw2int(f->abs_y);
-		n = p > 0 ? fingers : 0;
 
 		dprintk(9,
 			"bcm5974: p: %+05d w: %+05d x: %+05d y: %+05d n: %d\n",
 			p, w, x, y, n);
 
-		input_report_abs(input, ABS_TOOL_WIDTH, int2bound(&c->w, w));
-		input_report_abs(input, ABS_X, int2bound(&c->x, x - c->x.devmin));
-		input_report_abs(input, ABS_Y, int2bound(&c->y, c->y.devmax - y));
+		input_report_abs(dev, ABS_TOOL_WIDTH, int2bound(&c->w, w));
+		input_report_abs(dev, ABS_X, int2bound(&c->x, x - c->x.devmin));
+		input_report_abs(dev, ABS_Y, int2bound(&c->y, c->y.devmax - y));
 	}
 
-	input_report_abs(input, ABS_PRESSURE, int2bound(&c->p, p));
+	input_report_abs(dev, ABS_PRESSURE, int2bound(&c->p, p));
 
-	input_report_key(input, BTN_TOOL_FINGER, n == 1);
-	input_report_key(input, BTN_TOOL_DOUBLETAP, n == 2);
-	input_report_key(input, BTN_TOOL_TRIPLETAP, n > 2);
+	input_report_key(dev, BTN_TOOL_FINGER, n == 1);
+	input_report_key(dev, BTN_TOOL_DOUBLETAP, n == 2);
+	input_report_key(dev, BTN_TOOL_TRIPLETAP, n > 2);
+}
 
-	input_sync(input);
+/* report trackpad data as logical mouse/touchpad state */
+static int report_tp_state(struct bcm5974 *dev, int size)
+{
+	const struct bcm5974_config *c = &dev->cfg;
+	const int fingers = (size - 26) / 28;
+	const struct tp_finger *f = 0;
+	int p = 0, n = 0;
+
+	if (size < 26 || (size - 26) % 28 != 0)
+		return -EIO;
+
+	if (fingers) {
+		f = dev->tp_data->finger;
+		p = raw2int(f->force_major);
+		n = p > 0 ? fingers : 0;
+	}
+
+	switch (driver_mode) {
+	case MODE_MOUSE:
+		update_tp_mouse_state(dev->input, &dev->ms, c, f, p, n);
+		break;
+	case MODE_TOUCHPAD:
+		update_tp_touchpad_state(dev->input, c, f, p, n);
+		break;
+	}
+
+	input_sync(dev->input);
 
 	return 0;
 }

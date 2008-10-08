@@ -1,3 +1,10 @@
+bcm5974 (0.60) unstable; urgency=low
+
+  * New default mouse driver mode
+  * Mouse configuration parameters
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Mon, 01 Sep 2008 18:38:21 +0200
+
 bcm5974 (0.59) unstable; urgency=low
 
   * Cleanup patch from Dmitry Torokhov
