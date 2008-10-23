@@ -1,10 +1,31 @@
 ### Options for the bcm5974 driver
 
-## quirks for the Macbook Air
-#options usbhid quirks=0x05ac:0x0223:0x00020800,0x05ac:0x0224:0x00024800,0x05ac:0x0225:0x00020800
+## quirks for the Macbook Air (ANSI keyboard)
+#options usbhid quirks=0x05ac:0x0223:0x00020800
 
-## quirks for the Macbook Pro Penryn
-#options usbhid quirks=0x05ac:0x0230:0x00020800,0x05ac:0x0231:0x00024800,0x05ac:0x0232:0x00020800
+## quirks for the Macbook Air (ISO keyboard)
+#options usbhid quirks=0x05ac:0x0224:0x00024800
+
+## quirks for the Macbook Air (JIS keyboard)
+#options usbhid quirks=0x05ac:0x0225:0x00020800
+
+## quirks for the Macbook Pro Penryn (ANSI keyboard)
+#options usbhid quirks=0x05ac:0x0230:0x00020800
+
+## quirks for the Macbook Pro Penryn (ISO keyboard)
+#options usbhid quirks=0x05ac:0x0231:0x00024800
+
+## quirks for the Macbook Pro Penryn (JIS keyboard)
+#options usbhid quirks=0x05ac:0x0232:0x00020800
+
+## quirks for the Macbook 5,1 Unibody (ANSI keyboard)
+#options usbhid quirks=0x05ac:0x0236:0x00020800
+
+## quirks for the Macbook 5,1 Unibody (ISO keyboard)
+#options usbhid quirks=0x05ac:0x0237:0x00024800
+
+## quirks for the Macbook 5,1 Unibody (JIS keyboard)
+#options usbhid quirks=0x05ac:0x0238:0x00020800
 
 ## Debug level - uncomment this to get raw packets in /var/log/debug
 #options bcm5974 debug=99

@@ -28,25 +28,36 @@ DIR=`dirname $0`
 LSUSB=/usr/sbin/lsusb
 
 PAT_HEAD="options usbhid quirks="
-PAT[0]="05ac:022"
-PAT[1]="05ac:023"
-MATCH[0]=${PAT_HEAD}0x05ac:0x022
-MATCH[1]=${PAT_HEAD}0x05ac:0x023
+
+DEV[0]="0223"
+DEV[1]="0224"
+DEV[2]="0225"
+DEV[3]="0230"
+DEV[4]="0231"
+DEV[5]="0232"
+DEV[6]="0236"
+DEV[7]="0237"
+DEV[8]="0238"
 
 if [ -x $LSUSB ]; then
-    if [ "`$LSUSB|grep ${PAT[0]}`" != "" ]; then
-        SED="s/#${MATCH[0]}/${MATCH[0]}/"
-    elif [ "`$LSUSB|grep ${PAT[1]}`" != "" ]; then
-        SED="s/#${MATCH[1]}/${MATCH[1]}/"
-    else
-        echo No suitable device found
-        exit 1
-    fi
+    typeset -i i=0
+    while [ $i -lt 9 ]; do
+        PAT=05ac:${DEV[$i]}
+        MATCH=${PAT_HEAD}0x05ac:0x${DEV[$i]}
+        if [ "`$LSUSB|grep $PAT`" != "" ]; then
+            SED="s/#$MATCH/$MATCH/"
+        fi
+        i=$i+1
+    done
 else
     echo \* USB device: UNKNOWN - lsusb not found
     exit 1
 fi
 
-cat $DIR/..$ETCPATH | sed "$SED" > $ETCPATH
-
-exit 0
+if [ "$SED" != "" ]; then
+    cat $DIR/..$ETCPATH | sed "$SED" > $ETCPATH
+    exit 0
+else
+    echo No suitable device found
+    exit 1
+fi

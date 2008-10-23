@@ -1,5 +1,5 @@
 MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
 
-  * Switch back to normal mode when closing
+  * Add support for MacBook 5,1 (unibody)
 
  -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP
