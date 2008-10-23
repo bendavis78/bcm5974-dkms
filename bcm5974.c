@@ -226,7 +226,7 @@ static const struct bcm5974_config bcm5974_config_table[] = {
 		USB_DEVICE_ID_APPLE_WELLSPRING3_JIS,
 		0x84, sizeof(struct bt_data),
 		0x81, TYPE2, FINGER_TYPE2, FINGER_TYPE2 + SIZEOF_ALL_FINGERS,
-		{ DIM_PRESSURE, DIM_PRESSURE / SN_PRESSURE, 0, 300 },
+		{ DIM_PRESSURE, DIM_PRESSURE / SN_PRESSURE, 0, 768 },
 		{ DIM_WIDTH, DIM_WIDTH / SN_WIDTH, 0, 2048 },
 		{ DIM_X, DIM_X / SN_COORD, -4460, 5166 },
 		{ DIM_Y, DIM_Y / SN_COORD, -75, 6700 }
@@ -385,11 +385,6 @@ static int report_tp_state(struct bcm5974 *dev, int size)
 			"nmin: %d nmax: %d n: %d ibt: %d\n", abs_p, abs_w,
 			abs_x, abs_y, nmin, nmax, dev->fingers, ibt);
 
-	}
-
-	if (HAS_INTEGRATED_BUTTON(c)) {
-		input_report_key(input, BTN_TOOL_PRESS, ibt);
-		input_report_key(input, BTN_LEFT, ibt);
 	}
 
 	input_sync(input);
