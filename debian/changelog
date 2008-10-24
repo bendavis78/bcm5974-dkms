@@ -1,3 +1,9 @@
+bcm5974-dkms (1.0.1) unstable; urgency=low
+
+  * Package stability when device not supported fixed
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Sat, 25 Oct 2008 01:39:20 +0200
+
 bcm5974-dkms (1.0) unstable; urgency=low
 
   * Support for MacBookPro 5,1 (unibody) confirmed

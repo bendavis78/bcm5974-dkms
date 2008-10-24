@@ -3,7 +3,7 @@
 set -e
 
 NAME=bcm5974
-VERSION=1.0
+VERSION=1.0.1
 
 case "$1" in
     configure)
