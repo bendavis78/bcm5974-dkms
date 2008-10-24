@@ -1,55 +1,62 @@
-bcm5974 (0.66) unstable; urgency=low
+bcm5974-dkms (1.0) unstable; urgency=low
+
+  * Add support for MacBookPro 5,1 (unibody)
+  * Distribute package at launchpad as version 1.0
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Fri, 24 Oct 2008 23:36:22 +0200
+
+bcm5974-dkms (0.66) unstable; urgency=low
 
   * Add support for MacBook 5,1 (unibody)
 
  -- Henrik Rydberg <rydberg@euromail.se>  Sun, 19 Oct 2008 17:23:26 +0200
 
-bcm5974 (0.65) unstable; urgency=low
+bcm5974-dkms (0.65) unstable; urgency=low
 
   * Switch back to normal mode when closing
 
  -- Henrik Rydberg <rydberg@euromail.se>  Sun, 14 Sep 2008 16:06:42 +0200
 
-bcm5974 (0.64) unstable; urgency=low
+bcm5974-dkms (0.64) unstable; urgency=low
 
   * Finger counting improved further
 
  -- Henrik Rydberg <rydberg@euromail.se>  Wed, 03 Sep 2008 21:58:38 +0200
 
-bcm5974 (0.63) unstable; urgency=low
+bcm5974-dkms (0.63) unstable; urgency=low
 
   * Finger pressure hysteresis added
 
  -- Henrik Rydberg <rydberg@euromail.se>  Wed, 03 Sep 2008 13:26:29 +0200
 
-bcm5974 (0.62) unstable; urgency=low
+bcm5974-dkms (0.62) unstable; urgency=low
 
   * Compatibility mode reverted
   * BTN_TOUCH event added for mousedev
 
  -- Henrik Rydberg <rydberg@euromail.se>  Tue, 02 Sep 2008 20:46:51 +0200
 
-bcm5974 (0.61) unstable; urgency=low
+bcm5974-dkms (0.61) unstable; urgency=low
 
   * Smoother motion in mouse interface
 
  -- Henrik Rydberg <rydberg@euromail.se>  Mon, 01 Sep 2008 21:01:24 +0200
 
-bcm5974 (0.60) unstable; urgency=low
+bcm5974-dkms (0.60) unstable; urgency=low
 
   * New default mouse driver mode
   * Mouse configuration parameters
 
  -- Henrik Rydberg <rydberg@euromail.se>  Mon, 01 Sep 2008 18:38:21 +0200
 
-bcm5974 (0.59) unstable; urgency=low
+bcm5974-dkms (0.59) unstable; urgency=low
 
   * Cleanup patch from Dmitry Torokhov
   * Auto-suspend patch from Dmitry Torokhov
 
  -- Henrik Rydberg <rydberg@euromail.se>  Fri, 25 Jul 2008 20:14:05 +0200
 
-bcm5974 (0.58) unstable; urgency=low
+bcm5974-dkms (0.58) unstable; urgency=low
 
   * Name changes; use usbhid definitions, rename atp to bcm5974
   * Input syncing moved to report functions, event type setup broken out
@@ -59,14 +66,14 @@ bcm5974 (0.58) unstable; urgency=low
 
  -- Henrik Rydberg <rydberg@euromail.se>  Wed, 23 Jul 2008 02:20:10 +0200
 
-bcm5974 (0.57) unstable; urgency=low
+bcm5974-dkms (0.57) unstable; urgency=low
 
   * Keep reset_resume around
   * Submitted to kernel.org
 
  -- Henrik Rydberg <rydberg@euromail.se>  Sat, 19 Jul 2008 01:42:52 +0200
 
-bcm5974 (0.56) unstable; urgency=low
+bcm5974-dkms (0.56) unstable; urgency=low
 
   * Leave device initialization to hid; use mode-switch only
   * Mode switch moved to atp_open and simplified
@@ -76,33 +83,33 @@ bcm5974 (0.56) unstable; urgency=low
 
  -- Henrik Rydberg <rydberg@euromail.se>  Fri, 18 Jul 2008 02:42:52 +0200
 
-bcm5974 (0.55) unstable; urgency=low
+bcm5974-dkms (0.55) unstable; urgency=low
 
   * Package updates.
   * Reverting GFP_ATOMIC for irq handlers.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Wed, 09 Jul 2008 20:59:39 +0200
 
-bcm5974 (0.54) unstable; urgency=low
+bcm5974-dkms (0.54) unstable; urgency=low
 
   * And another one... finally got the bright idea to test it by
     emulating the different product ids.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Tue, 08 Jul 2008 20:59:39 +0200
 
-bcm5974 (0.53) unstable; urgency=low
+bcm5974-dkms (0.53) unstable; urgency=low
 
   * Another typo in the post-install script.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Mon, 07 Jul 2008 20:59:39 +0200
 
-bcm5974 (0.52) unstable; urgency=low
+bcm5974-dkms (0.52) unstable; urgency=low
 
   * Typo in the post-install script.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Mon, 07 Jul 2008 20:09:39 +0200
 
-bcm5974 (0.51) unstable; urgency=low
+bcm5974-dkms (0.51) unstable; urgency=low
 
   * Fine-tuned signal-to-noise ratio, smoother mouse motion.
   * Interrupt code got minor simplifications.
@@ -110,7 +117,7 @@ bcm5974 (0.51) unstable; urgency=low
 
  -- Henrik Rydberg <rydberg@euromail.se>  Mon, 07 Jul 2008 18:09:39 +0200
 
-bcm5974 (0.5) unstable; urgency=low
+bcm5974-dkms (0.5) unstable; urgency=low
 
   * Working palm detection
   * Changes for kernel.org
@@ -118,62 +125,62 @@ bcm5974 (0.5) unstable; urgency=low
 
  -- Henrik Rydberg <rydberg@euromail.se>  Sun, 06 Jul 2008 20:59:39 +0200
 
-bcm5974 (0.42) unstable; urgency=low
+bcm5974-dkms (0.42) unstable; urgency=low
 
   * First button click registered.
   * Hooks pre/post-reset added.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Tue, 01 Jul 2008 20:59:39 +0200
 
-bcm5974 (0.41) unstable; urgency=low
+bcm5974-dkms (0.41) unstable; urgency=low
 
   * The reset_resume kernel function added.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Sun, 29 Jun 2008 20:59:39 +0200
 	
-bcm5974 (0.4) unstable; urgency=low
+bcm5974-dkms (0.4) unstable; urgency=low
 
   * Both finger pressure and width reported.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Sun, 29 Jun 2008 18:59:39 +0200
 
-bcm5974 (0.31) unstable; urgency=low
+bcm5974-dkms (0.31) unstable; urgency=low
 
   * Administrative changes for kernel.org.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Fri, 27 Jun 2008 20:59:39 +0200
 
-bcm5974 (0.3) unstable; urgency=low
+bcm5974-dkms (0.3) unstable; urgency=low
 
   * Explicit device structure, use all packages.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Fri, 27 Jun 2008 18:59:39 +0200
 
-bcm5974 (0.23) unstable; urgency=low
+bcm5974-dkms (0.23) unstable; urgency=low
 
   * Finger release not reported properly.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Fri, 27 Jun 2008 17:59:39 +0200
 
-bcm5974 (0.22) unstable; urgency=low
+bcm5974-dkms (0.22) unstable; urgency=low
 
   * ABS coordinates more stable with synaptics.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Thu, 26 Jun 2008 20:59:39 +0200
 
-bcm5974 (0.21) unstable; urgency=low
+bcm5974-dkms (0.21) unstable; urgency=low
 
   * Fixed the relative coordinate scaling.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Wed, 25 Jun 2008 20:59:39 +0200
 
-bcm5974 (0.2) unstable; urgency=low
+bcm5974-dkms (0.2) unstable; urgency=low
 
   * Misinterpreted pressure input, noise reduction.
 
  -- Henrik Rydberg <rydberg@euromail.se>  Wed, 25 Jun 2008 20:59:39 +0200
 
-bcm5974 (0.1) unstable; urgency=low
+bcm5974-dkms (0.1) unstable; urgency=low
 
   * First version.
 

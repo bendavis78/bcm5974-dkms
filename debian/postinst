@@ -2,8 +2,8 @@
 
 set -e
 
-NAME=MODULE_NAME
-VERSION=MODULE_VERSION
+NAME=bcm5974
+VERSION=0.99
 
 case "$1" in
     configure)

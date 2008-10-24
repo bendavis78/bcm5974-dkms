@@ -1,5 +1,0 @@
-MODULE_NAME-dkms (MODULE_VERSION) unstable; urgency=low
-
-  * Add support for MacBook 5,1 (unibody)
-
- -- Henrik Rydberg <rydberg@euromail.se>  DATE_STAMP

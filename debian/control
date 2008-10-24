@@ -1,12 +1,12 @@
-Source: MODULE_NAME-dkms
-Section: linux-input
+Source: bcm5974-dkms
+Section: misc
 Priority: optional
 Maintainer: Henrik Rydberg <rydberg@euromail.se>
 Build-Depends: debhelper (>= 5)
 Standards-Version: 3.7.2
 Homepage: http://web.comhem.se/rydberg/Bits/
 
-Package: MODULE_NAME-dkms
+Package: bcm5974-dkms
 Architecture: all
 Depends: dkms (>= 1.95), bash (>> 1.99)
 Description: Apple USB BCM5974 Multitouch trackpad support (DKMS)

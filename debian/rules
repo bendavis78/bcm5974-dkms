@@ -4,8 +4,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-NAME=MODULE_NAME
-VERSION=MODULE_VERSION
+NAME=bcm5974
+VERSION=0.99
 
 configure: configure-stamp
 configure-stamp:
