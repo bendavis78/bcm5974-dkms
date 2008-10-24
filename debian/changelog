@@ -1,4 +1,4 @@
-bcm5974-dkms (1.0) unstable; urgency=low
+bcm5974-dkms (0.99) unstable; urgency=low
 
   * Add support for MacBookPro 5,1 (unibody)
   * Distribute package at launchpad as version 1.0

@@ -24,7 +24,6 @@ ETCPATH=/etc/modprobe.d/$DRIVER
 
 echo -----------------------------------------------------------------------
 
-DIR=`dirname $0`
 LSUSB=/usr/sbin/lsusb
 
 PAT_HEAD="options usbhid quirks="
@@ -55,7 +54,8 @@ else
 fi
 
 if [ "$SED" != "" ]; then
-    cat $DIR/..$ETCPATH | sed "$SED" > $ETCPATH
+    cat $ETCPATH | sed "$SED" > $ETCPATH.tmp
+    mv $ETCPATH.tmp $ETCPATH
     exit 0
 else
     echo No suitable device found
