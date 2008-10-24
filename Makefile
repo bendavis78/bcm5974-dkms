@@ -1,5 +1,5 @@
 NAME	= bcm5974
-VERSION	= 0.99
+VERSION	= 1.0
 SRC	= usr/src
 ETC	= etc/modprobe.d
 

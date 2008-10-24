@@ -42,8 +42,13 @@
 #include <linux/mutex.h>
 
 #define USB_VENDOR_ID_APPLE		0x05ac
+
+#ifndef BTN_TOOL_PRESS
 #define BTN_TOOL_PRESS			0x148
+#endif
+#ifndef BTN_TOOL_QUADTAP
 #define BTN_TOOL_QUADTAP		0x14f
+#endif
 
 /* MacbookAir, aka wellspring */
 #define USB_DEVICE_ID_APPLE_WELLSPRING_ANSI	0x0223
