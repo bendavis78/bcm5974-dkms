@@ -68,7 +68,7 @@ if [ -f $MODULES ]; then
     fi
 fi
 
-# Do we have old quirks?
+# Do we have old options quirks?
 MODPROBE=/etc/modprobe.d/options
 if [ -f $MODPROBE ]; then
     MODPROBEOPTS=`grep quirks= $MODPROBE|grep -v ^#|grep 0x05ac:0x02`
@@ -82,21 +82,13 @@ else
     echo \* $MODPROBE: file not found
 fi
 
-# Do we have the right quirks?
+# Do we have old bcm5974 quirks?
 DRIVMOD=/etc/modprobe.d/$DRIVER
 if [ -f $DRIVMOD ]; then
-    DRIVMODOPTS=`grep quirks= $DRIVMOD|grep -v ^#|grep 0x05ac:0x02`
-    if [ "$DRIVMODOPTS" != "" ]; then
-        echo \* $DRIVMOD: has quirks, good
-    else
-        echo \* $DRIVMOD: does NOT have quirks
-        echo Uncomment the right quirk line in $DRIVMOD
-        exit 1
-    fi
-else
-    echo \* $DRIVMOD: file not found
-    echo Copy the etc/modprobe.d/bcm5974 file to /etc/modprobe.d/
+    echo \* $DRIVMOD: exists - please remove file
     exit 1
+else
+    echo \* $DRIVMOD: no such file, good
 fi
 
 # Did the depmod bite?
@@ -152,66 +144,68 @@ DIFF=/tmp/synclient-output.diff.$$
 TMP=/tmp/synclient-output.txt.$$
 synclient -l | grep -v Parameter | sort > $TMP
 diff -u - $TMP > $DIFF <<EOF
-    AccelFactor             = 0.1
-    BottomEdge              = 800
+    AccelFactor             = 0.0331345
+    BottomEdge              = 756
     CircScrollDelta         = 0.1
     CircScrollTrigger       = 0
     CircularPad             = 0
     CircularScrolling       = 0
+    ClickFinger1            = 1
+    ClickFinger2            = 3
+    ClickFinger3            = 2
     ClickTime               = 100
     CoastingSpeed           = 0
     CornerCoasting          = 0
-    EdgeMotionMaxSpeed      = 80
+    EdgeMotionMaxSpeed      = 120
     EdgeMotionMaxZ          = 160
     EdgeMotionMinSpeed      = 1
-    EdgeMotionMinZ          = 30
+    EdgeMotionMinZ          = 29
     EdgeMotionUseAlways     = 0
     EmulateMidButtonTime    = 75
-    EmulateTwoFingerMinZ    = 257
+    EmulateTwoFingerMinZ    = 281
     FastTaps                = 0
-    FingerHigh              = 80
-    FingerLow               = 16
+    FingerHigh              = 29
+    FingerLow               = 25
     FingerPress             = 256
     GrabEventDevice         = 1
     GuestMouseOff           = 0
     HorizEdgeScroll         = 0
-    HorizScrollDelta        = 0
-    HorizTwoFingerScroll    = 1
+    HorizScrollDelta        = 30
+    HorizTwoFingerScroll    = 0
     LBCornerButton          = 0
-    LeftEdge                = 0
+    LeftEdge                = 51
     LeftRightScrolling      = 1
     LeftRightScrollRepeat   = 1
     LockedDrags             = 0
     LockedDragTimeout       = 5000
     LTCornerButton          = 0
-    MaxDoubleTapTime        = 200
-    MaxSpeed                = 1.2
-    MaxTapMove              = 100
-    MaxTapTime              = 223
-    MinSpeed                = 0.8
-    MultiFingerButton       = 2
+    MaxDoubleTapTime        = 180
+    MaxSpeed                = 1
+    MaxTapMove              = 66
+    MaxTapTime              = 180
+    MinSpeed                = 0.75
     PalmDetect              = 0
     PalmMinWidth            = 10
-    PalmMinZ                = 200
+    PalmMinZ                = 199
     PressureMotionMaxFactor = 1
     PressureMotionMaxZ      = 160
     PressureMotionMinFactor = 1
-    PressureMotionMinZ      = 10
+    PressureMotionMinZ      = 29
     RBCornerButton          = 0
-    RightEdge               = 1280
+    RightEdge               = 1229
     RTCornerButton          = 0
     ScrollButtonRepeat      = 100
     SingleTapTimeout        = 180
     TapButton1              = 0
     TapButton2              = 0
     TapButton3              = 0
-    TopEdge                 = 0
+    TopEdge                 = 44
     TouchpadOff             = 0
     TrackstickSpeed         = 40
     UpDownScrolling         = 1
     UpDownScrollRepeat      = 1
     VertEdgeScroll          = 0
-    VertScrollDelta         = 40
+    VertScrollDelta         = 30
     VertTwoFingerScroll     = 1
 EOF
 rm -f $TMP

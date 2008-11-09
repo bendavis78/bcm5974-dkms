@@ -1,7 +1,6 @@
 NAME	= bcm5974
-VERSION	= 1.0.1
+VERSION	= 1.1.0
 SRC	= usr/src
-ETC	= etc/modprobe.d
 
 TARBALL	= $(NAME)-$(VERSION).dkms.tar.gz
 PATCH	= ./scripts/patch-name-version.sh $(NAME) $(VERSION)
@@ -19,9 +18,7 @@ distclean: clean
 
 install: $(SRC)/$(TARBALL)
 	install -d "$(DESTDIR)/$(SRC)"
-	install -d "$(DESTDIR)/$(ETC)"
 	install -m 644 $(SRC)/$(NAME)-$(VERSION).dkms.tar.gz "$(DESTDIR)/$(SRC)"
-	install -m 644 $(ETC)/$(NAME) "$(DESTDIR)/$(ETC)"
 
 bump:
 	$(PATCH) debian/postinst

@@ -1,0 +1,27 @@
+Modifying and building the DKMS package
+
+1. use bzr to sync source with launchpad
+
+2. make your changes
+
+3. modify the VERSION variable in Makefile, then do
+
+   make bump
+
+4. add a new entry to debian/changelog, matching VERSION
+
+5. build binary package for testing with
+
+   dpkg-buildpackage
+
+6. clean the checkout with
+
+   make distclean
+
+7. build source package for upload with
+
+   debuild -S -sa
+
+8. upload packacke to ppa with (see ~/.dput.cf)
+
+   dput your-mactel-ppa-dput-entry name-and-version_source.changes
