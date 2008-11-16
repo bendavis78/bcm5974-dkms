@@ -1,3 +1,9 @@
+bcm5974-dkms (1.1.1) intrepid; urgency=low
+
+  * Add autoinstall directive
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Sun, 16 Nov 2008 02:11:44 +0100
+
 bcm5974-dkms (1.1.0) intrepid; urgency=low
 
   * Kernel configuration removed; now depends on the usbhid-dkms package.
