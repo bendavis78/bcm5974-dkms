@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Henrik Rydberg <rydberg@euromail.se>
 Build-Depends: debhelper (>= 5)
 Standards-Version: 3.7.2
-Homepage: http://web.comhem.se/rydberg/Bits/
+Homepage: http://bitmath.org/code/bcm5974-dkms/
 
 Package: bcm5974-dkms
 Architecture: all
