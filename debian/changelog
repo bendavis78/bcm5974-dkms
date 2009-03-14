@@ -1,3 +1,9 @@
+bcm5974-dkms (1.1.2) jaunty; urgency=low
+
+  * Rebuild for jaunty
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Sat, 14 Mar 2009 09:21:11 +0100
+
 bcm5974-dkms (1.1.1) intrepid; urgency=low
 
   * Add autoinstall directive
