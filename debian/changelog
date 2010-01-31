@@ -1,3 +1,9 @@
+bcm5974-dkms (1.1.4-0ubuntu1~mactel-support1~karmic1) karmic; urgency=low
+
+  * Update karmic version to mt-enabled kernel version 2.6.33
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Sun, 31 Jan 2010 12:06:47 +0100
+
 bcm5974-dkms (1.1.3) jaunty; urgency=low
 
   * Removed dependency on usbhid
