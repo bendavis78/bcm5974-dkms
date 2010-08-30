@@ -1,8 +1,9 @@
-bcm5974-dkms (1.1.4-0ubuntu1~mactel-support1~karmic1) karmic; urgency=low
+bcm5974-dkms (1.1.5) maverick; urgency=low
 
-  * Update karmic version to mt-enabled kernel version 2.6.33
+  * Update maverick version to kernel version 2.6.36
+  * Adjust contact scaling
 
- -- Henrik Rydberg <rydberg@euromail.se>  Sun, 31 Jan 2010 12:06:47 +0100
+ -- Henrik Rydberg <rydberg@euromail.se>  Mon, 30 Aug 2010 12:48:04 +0200
 
 bcm5974-dkms (1.1.3) jaunty; urgency=low
 

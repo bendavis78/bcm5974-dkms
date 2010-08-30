@@ -1,5 +1,5 @@
 NAME	= bcm5974
-VERSION	= 1.1.4
+VERSION	= 1.1.5
 SRC	= usr/src
 
 TARBALL	= $(NAME)-$(VERSION).dkms.tar.gz
