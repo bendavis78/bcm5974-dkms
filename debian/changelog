@@ -1,3 +1,9 @@
+bcm5974-dkms (1.1.6) maverick; urgency=low
+
+  * Add support for MBA31 and MBA32 models
+
+ -- Henrik Rydberg <rydberg@euromail.se>  Thu, 04 Nov 2010 14:45:20 +0100
+
 bcm5974-dkms (1.1.5) maverick; urgency=low
 
   * Update maverick version to kernel version 2.6.36

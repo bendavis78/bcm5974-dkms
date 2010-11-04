@@ -8,7 +8,7 @@ Homepage: http://bitmath.org/code/bcm5974-dkms/
 
 Package: bcm5974-dkms
 Architecture: all
-Depends: dkms (>= 1.95), bash (>> 1.99)
+Depends: dkms (>= 1.95), bash (>> 1.99), hid-dkms (>= 1.0.6)
 Description: Apple USB BCM5974 Multitouch trackpad support (DKMS)
  This driver adds support for the multitouch trackpad on the new
  Apple Macbook Air and Macbook Pro Penryn laptops. It replaces the
