@@ -1,8 +1,9 @@
 bcm5974-dkms (1.1.8) maverick; urgency=low
 
   * Prepare for new upstream version.
+  * Add support for MPB8,2
 
- -- Henrik Rydberg <rydberg@bitmath.org>  Wed, 09 Mar 2011 23:10:12 +0100
+ -- Henrik Rydberg <rydberg@bitmath.org>  Wed, 09 Mar 2011 23:12:56 +0100
 
 bcm5974-dkms (1.1.7) maverick; urgency=low
 
