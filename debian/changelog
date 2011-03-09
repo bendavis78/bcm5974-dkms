@@ -1,3 +1,9 @@
+bcm5974-dkms (1.1.8) maverick; urgency=low
+
+  * Prepare for new upstream version.
+
+ -- Henrik Rydberg <rydberg@bitmath.org>  Wed, 09 Mar 2011 23:10:12 +0100
+
 bcm5974-dkms (1.1.7) maverick; urgency=low
 
   * Measured trackpad range for MBA32
