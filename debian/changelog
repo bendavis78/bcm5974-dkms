@@ -1,3 +1,9 @@
+bcm5974-dkms (1.1.9) natty; urgency=low
+
+  * Corrected distro target
+
+ -- Henrik Rydberg <rydberg@bitmath.org>  Tue, 15 Mar 2011 10:20:03 +0100
+
 bcm5974-dkms (1.1.8) maverick; urgency=low
 
   * Prepare for new upstream version.
